@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- ============================================================
+    META VIEWPORT — hace que la app se vea correctamente en móvil.
+    Sin esta línea, el navegador renderiza la página en escritorio
+    y la encoge, rompiendo el diseño responsive.
+  ============================================================ -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ============================================================
+    META CHARSET — define la codificación de texto.
+    Necesario para que tildes y ñ se muestren correctamente.
+  ============================================================ -->
+  <meta charset="UTF-8">
+
+  <!-- ============================================================
+    LINK AL MANIFEST — convierte la web en PWA instalable.
+    El navegador lee este archivo para saber el nombre, ícono
+    y color de la app cuando el usuario la "instala" en pantalla.
+  ============================================================ -->
+  <link rel="manifest" href="manifest.json">
+
+  <!-- ============================================================
+    META THEME COLOR — color de la barra del navegador en Android.
+    Se usa el primario de Llanea (#1A6B8A).
+  ============================================================ -->
+  <meta name="theme-color" content="#1A6B8A">
+
+  <!-- ============================================================
+    META APPLE — configuración para Safari/iOS.
+    apple-mobile-web-app-capable: habilita modo pantalla completa al
+    agregar a inicio en iPhone.
+    apple-mobile-web-app-status-bar-style: barra de estado oscura.
+  ============================================================ -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Llanea">
+
+  <title>Llanea — El Casanare que buscabas.</title>
+
+  <style>
+    /* ── SISTEMA DE DISEÑO LLANEA ───────────────────────── */
+    :root {
+      --primario:      #1A6B8A;
+      --primario-osc:  #0F4A62;
+      --acento:        #F4C430;
+      --acento-texto:  #0F4A62;
+      --fondo:         #F0F6FA;
+      --texto:         #0F2B3D;
+      --texto-sec:     #5A7A8A;
+      --popular:       #E8783A;
+      --radio-card:    12px;
+      --radio-btn:     8px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      background: var(--fondo);
+      color: var(--texto);
+      min-height: 100dvh;
+      max-width: 402px;
+      margin: 0 auto;
+    }
+
+    /* ── NAVBAR ─────────────────────────────────────────── */
+    .navbar {
+      background: white;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #E5EFF5;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .navbar-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primario);
+    }
+    .navbar-logo .garza { font-size: 22px; }
+    .navbar-icons { display: flex; gap: 14px; align-items: center; }
+    .navbar-icons span { font-size: 20px; cursor: pointer; }
+    .cart-badge {
+      position: relative;
+    }
+    .cart-badge::after {
+      content: '3';
+      position: absolute;
+      top: -6px; right: -8px;
+      background: var(--acento);
+      color: var(--acento-texto);
+      font-size: 9px;
+      font-weight: 700;
+      border-radius: 10px;
+      padding: 1px 4px;
+    }
+
+    /* ── HERO ────────────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(160deg, var(--primario) 0%, var(--primario-osc) 100%);
+      padding: 28px 16px 24px;
+      color: white;
+    }
+    .hero-cats {
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      opacity: 0.75;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    .hero h1 {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+    .hero p {
+      font-size: 13px;
+      opacity: 0.85;
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+    .search-bar {
+      background: white;
+      border-radius: var(--radio-btn);
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--texto-sec);
+      font-size: 14px;
+    }
+
+    /* ── FILTER PILLS ────────────────────────────────────── */
+    .pills {
+      display: flex;
+      gap: 8px;
+      padding: 14px 16px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .pills::-webkit-scrollbar { display: none; }
+    .pill {
+      padding: 7px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      white-space: nowrap;
+      cursor: pointer;
+      border: 1.5px solid #D0E4EE;
+      background: white;
+      color: var(--texto);
+    }
+    .pill.active {
+      background: var(--acento);
+      border-color: var(--acento);
+      color: var(--acento-texto);
+      font-weight: 700;
+    }
+
+    /* ── SECCIONES ───────────────────────────────────────── */
+    .section { padding: 4px 16px 8px; }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 12px;
+    }
+    .section-title { font-size: 16px; font-weight: 700; }
+    .ver-todo { font-size: 13px; color: var(--primario); font-weight: 500; }
+
+    /* ── CARDS ───────────────────────────────────────────── */
+    .cards-row {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+    .cards-row::-webkit-scrollbar { display: none; }
+    .card {
+      min-width: 160px;
+      background: white;
+      border-radius: var(--radio-card);
+      overflow: hidden;
+      flex-shrink: 0;
+      box-shadow: 0 1px 6px rgba(15,43,61,0.07);
+    }
+    .card-img {
+      height: 96px;
+      background: linear-gradient(135deg, #E8783A 0%, #F4C430 60%, #1A6B8A 100%);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+    }
+    .badge {
+      position: absolute;
+      top: 8px; left: 8px;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 3px 7px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .badge-verificado { background: var(--primario); color: white; }
+    .badge-nuevo      { background: var(--acento);   color: var(--acento-texto); }
+    .badge-popular    { background: var(--popular);  color: white; }
+    .badge-destacado  { background: var(--acento);   color: var(--acento-texto); }
+
+    .card-body { padding: 10px 10px 12px; }
+    .card-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+    .card-location { font-size: 11px; color: var(--texto-sec); margin-bottom: 4px; }
+    .card-rating { font-size: 11px; color: var(--texto-sec); margin-bottom: 4px; }
+    .card-price { font-size: 14px; font-weight: 700; color: var(--texto); }
+    .card-price span { font-size: 11px; font-weight: 400; color: var(--texto-sec); }
+
+    /* ── BANNER PWA ──────────────────────────────────────── */
+    .pwa-banner {
+      margin: 16px;
+      background: var(--primario);
+      color: white;
+      border-radius: var(--radio-card);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .pwa-banner .icon { font-size: 28px; }
+    .pwa-banner-text h3 { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+    .pwa-banner-text p  { font-size: 12px; opacity: 0.85; }
+    .btn-instalar {
+      margin-left: auto;
+      background: var(--acento);
+      color: var(--acento-texto);
+      border: none;
+      padding: 8px 14px;
+      border-radius: var(--radio-btn);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .spacer { height: 32px; }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="navbar-logo">
+      <span class="garza">🦤</span> Llanea
+    </div>
+    <div class="navbar-icons">
+      <span>🔔</span>
+      <span class="cart-badge">🛒</span>
+      <span>👤</span>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <p class="hero-cats">Alojamiento · Gastronomía · Ecoturismo</p>
+    <h1>Descubre el Casanare como un local.</h1>
+    <p>Hatos, gastronomía llanera y ecoturismo en los 19 municipios. Todo verificado.</p>
+    <div class="search-bar">🔍 ¿A dónde vas en Casanare?</div>
+  </section>
+
+  <!-- FILTER PILLS -->
+  <div class="pills">
+    <div class="pill active">🟡 Todos</div>
+    <div class="pill">Alojamiento</div>
+    <div class="pill">Gastronomía</div>
+    <div class="pill">Ecoturismo</div>
+    <div class="pill">Cultura</div>
+  </div>
+
+  <!-- SECCIÓN: DESTACADOS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-title">Destacados cerca de ti</span>
+      <span class="ver-todo">Ver todo ›</span>
+    </div>
+    <div class="cards-row">
+      <div class="card">
+        <div class="card-img">
+          🌿
+          <span class="badge badge-verificado">✓ Verificado</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Hato La Aurora</div>
+          <div class="card-location">📍 Paz de Ariporo</div>
+          <div class="card-rating">⭐ 4.8 (124)</div>
+          <div class="card-price">$280k <span>/ noche</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-img" style="background:linear-gradient(135deg,#F4C430,#E8783A)">
+          🌴
+          <span class="badge badge-nuevo">Nuevo</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">El Morichal</div>
+          <div class="card-location">📍 Yopal</div>
+          <div class="card-rating">⭐ 4.6 (38)</div>
+          <div class="card-price">$45k <span>/ persona</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-img" style="background:linear-gradient(135deg,#1A6B8A,#0F2B3D)">
+          🏞️
+          <span class="badge badge-verificado">✓ Verificado</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Glamping Río Cravo</div>
+          <div class="card-location">📍 Orocué</div>
+          <div class="card-rating">⭐ 4.9 (41)</div>
+          <div class="card-price">$350k <span>/ noche</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN: GASTRONOMÍA -->
+  <div class="section" style="margin-top:8px">
+    <div class="section-header">
+      <span class="section-title">🍽️ Gastronomía Llanera</span>
+      <span class="ver-todo">Ver todo ›</span>
+    </div>
+    <div class="cards-row">
+      <div class="card">
+        <div class="card-img" style="background:linear-gradient(135deg,#E8783A,#F4C430)">
+          🥩
+          <span class="badge badge-popular">Popular</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Asadero Don Ramón</div>
+          <div class="card-location">📍 Yopal</div>
+          <div class="card-rating">⭐ 4.5 (203)</div>
+          <div class="card-price">$35k <span>/ persona</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-img" style="background:linear-gradient(135deg,#1A6B8A,#E8783A)">
+          🍲
+          <span class="badge badge-verificado">✓ Verificado</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Fogón Llanero</div>
+          <div class="card-location">📍 Yopal</div>
+          <div class="card-rating">⭐ 4.7 (89)</div>
+          <div class="card-price">$28k <span>/ plato</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-img" style="background:linear-gradient(135deg,#0F2B3D,#1A6B8A)">
+          🌮
+          <span class="badge badge-destacado">Destacado</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">El Chinchorro</div>
+          <div class="card-location">📍 Villanueva</div>
+          <div class="card-rating">⭐ 4.8 (156)</div>
+          <div class="card-price">$42k <span>/ persona</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BANNER PWA: INSTALAR -->
+  <div class="pwa-banner">
+    <span class="icon">📲</span>
+    <div class="pwa-banner-text">
+      <h3>Instala Llanea</h3>
+      <p>Agrégala a tu pantalla de inicio. Sin tiendas de apps.</p>
+    </div>
+    <button class="btn-instalar" id="btnInstalar">Instalar</button>
+  </div>
+
+  <div class="spacer"></div>
+
+  <!-- ============================================================
+    REGISTRO DEL SERVICE WORKER
+    Este bloque de JavaScript le dice al navegador que registre
+    el service worker (sw.js). El service worker es el componente
+    que permite que la PWA funcione offline y sea instalable.
+    Se ejecuta solo si el navegador soporta service workers.
+  ============================================================ -->
+  <script>
+    // ── REGISTRO DEL SERVICE WORKER ─────────────────────────────
+    if ('serviceWorker' in navigator) {
+      // El navegador soporta service workers
+      navigator.serviceWorker
+        .register('./sw.js')           // ruta al archivo del SW
+        .then(reg => {
+          console.log('[Llanea PWA] Service Worker registrado:', reg.scope);
+        })
+        .catch(err => {
+          console.error('[Llanea PWA] Error al registrar SW:', err);
+        });
+    }
+
+    // ── PROMPT DE INSTALACIÓN ────────────────────────────────────
+    // El navegador dispara 'beforeinstallprompt' cuando detecta
+    // que la app cumple los criterios PWA y puede instalarse.
+    let deferredPrompt = null;
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();           // evita que el banner aparezca solo
+      deferredPrompt = e;           // guarda el evento para usarlo después
+      document.getElementById('btnInstalar').style.display = 'block';
+    });
+
+    // Al tocar el botón "Instalar", mostramos el diálogo nativo
+    document.getElementById('btnInstalar').addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();                        // muestra el diálogo
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log('[Llanea PWA] Respuesta del usuario:', outcome);
+      deferredPrompt = null;
+    });
+  </script>
+</body>
+</html>
