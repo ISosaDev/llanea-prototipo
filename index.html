@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="light">
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="UTF-8">
@@ -9,25 +9,35 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Llanea">
   <title>Llanea — El Casanare que buscabas.</title>
+
   <style>
+    /* ── SISTEMA DE DISEÑO LLANEA ───────────────────────── */
     :root {
-      --primario:     #1A6B8A;
-      --primario-osc: #0F4A62;
-      --acento:       #F4C430;
-      --acento-texto: #0F4A62;
-      --fondo:        #F0F6FA;
-      --texto:        #0F2B3D;
-      --texto-sec:    #5A7A8A;
-      --popular:      #E8783A;
-      --radio-card:   12px;
-      --radio-btn:    8px;
+      --primario:      #1A6B8A;
+      --primario-osc:  #0F4A62;
+      --acento:        #F4C430;
+      --acento-texto:  #0F4A62;
+      --fondo:         #F0F6FA;
+      --superficie:    #FFFFFF;
+      --texto:         #0F2B3D;
+      --texto-sec:     #5A7A8A;
+      --popular:       #E8783A;
+      --borde:         #E5EFF5;
+      --radio-card:    12px;
+      --radio-btn:     8px;
     }
-    .dark {
-      --fondo:     #0F2B3D;
-      --texto:     #F0F6FA;
-      --texto-sec: #8AACBA;
+
+    /* ── MODO OSCURO ────────────────────────────────────── */
+    [data-theme="dark"] {
+      --fondo:      #0F2B3D;
+      --superficie: #1A3A4A;
+      --texto:      #F0F6FA;
+      --texto-sec:  #8AAFBF;
+      --borde:      #1E4A5A;
     }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
       font-family: 'Inter', 'Segoe UI', sans-serif;
       background: var(--fondo);
@@ -35,70 +45,136 @@
       min-height: 100dvh;
       max-width: 402px;
       margin: 0 auto;
-      transition: background 0.2s, color 0.2s;
+      transition: background 0.25s, color 0.25s;
     }
 
-    /* ── NAVBAR ── */
+    /* ── DRAWER OVERLAY ─────────────────────────────────── */
+    .drawer-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(15,43,61,0.5);
+      z-index: 200;
+    }
+    .drawer-overlay.open { display: block; }
+
+    .drawer {
+      position: fixed;
+      top: 0; left: -280px;
+      width: 280px; height: 100%;
+      background: var(--superficie);
+      z-index: 201;
+      transition: left 0.28s cubic-bezier(.4,0,.2,1);
+      padding: 0;
+      box-shadow: 4px 0 20px rgba(15,43,61,0.15);
+    }
+    .drawer.open { left: 0; }
+
+    .drawer-header {
+      background: var(--primario);
+      padding: 48px 20px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .drawer-header img { width: 40px; height: 40px; border-radius: 8px; }
+    .drawer-header span { color: white; font-size: 18px; font-weight: 700; }
+
+    .drawer-menu { padding: 12px 0; }
+    .drawer-item {
+      padding: 14px 20px;
+      font-size: 15px;
+      color: var(--texto);
+      cursor: pointer;
+      border-left: 3px solid transparent;
+      transition: all 0.15s;
+    }
+    .drawer-item:hover { background: var(--fondo); border-left-color: var(--primario); }
+    .drawer-item.active { color: var(--primario); font-weight: 600; border-left-color: var(--primario); background: var(--fondo); }
+
+    /* ── NAVBAR ─────────────────────────────────────────── */
     .navbar {
-      background: white;
-      padding: 12px 14px;
+      background: var(--superficie);
+      padding: 10px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid #E5EFF5;
+      border-bottom: 1px solid var(--borde);
       position: sticky;
       top: 0;
       z-index: 100;
     }
-    .dark .navbar { background: #0F2B3D; border-bottom-color: #1A3A4A; }
 
-    .nav-left { display: flex; align-items: center; gap: 10px; }
+    .nav-left { display: flex; align-items: center; gap: 14px; }
 
-    /* Hamburguesa */
+    /* Botón hamburguesa — 3 líneas */
     .hamburger {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 5px;
       cursor: pointer;
-      padding: 2px;
+      padding: 4px;
     }
     .hamburger span {
       display: block;
-      width: 20px;
-      height: 2px;
+      width: 22px; height: 2px;
       background: var(--texto);
       border-radius: 2px;
+      transition: background 0.2s;
     }
 
-    /* Logo SVG garza */
-    .logo-wrap { display: flex; align-items: center; gap: 7px; }
-    .logo-svg { width: 32px; height: 32px; }
-    .logo-texto { font-size: 17px; font-weight: 700; color: var(--primario); }
+    /* Logo oficial: imagen + texto */
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-logo img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+    }
+    .nav-logo-text {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primario);
+    }
 
-    .nav-right { display: flex; align-items: center; gap: 12px; }
-    .nav-icon { font-size: 19px; cursor: pointer; position: relative; }
+    /* Iconos derecha */
+    .nav-right { display: flex; align-items: center; gap: 10px; }
 
-    /* Badge carrito */
+    /* Toggle modo oscuro — luna/sol */
+    .theme-toggle {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 20px;
+      padding: 2px;
+      line-height: 1;
+    }
+
+    .nav-icon { font-size: 20px; cursor: pointer; position: relative; }
+
     .cart-wrap { position: relative; }
     .cart-badge {
       position: absolute;
-      top: -6px; right: -8px;
+      top: -6px; right: -7px;
       background: var(--acento);
       color: var(--acento-texto);
       font-size: 9px;
       font-weight: 700;
       border-radius: 10px;
-      padding: 1px 4px;
-      line-height: 1.3;
+      padding: 1px 5px;
+      min-width: 16px;
+      text-align: center;
     }
 
     /* Avatar IS */
     .avatar {
       width: 30px; height: 30px;
+      border-radius: 50%;
       background: var(--primario);
       color: white;
-      border-radius: 50%;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 700;
       display: flex;
       align-items: center;
@@ -106,63 +182,55 @@
       cursor: pointer;
     }
 
-    /* ── HERO ── */
+    /* ── HERO ────────────────────────────────────────────── */
     .hero {
-      background: linear-gradient(160deg, #2A8AAA 0%, var(--primario-osc) 100%);
+      background: linear-gradient(160deg, #1A8A9A 0%, var(--primario) 40%, var(--primario-osc) 100%);
       padding: 24px 16px 22px;
       color: white;
     }
     .hero-cats {
       font-size: 10px;
-      letter-spacing: 1.4px;
+      letter-spacing: 1.5px;
       opacity: 0.8;
       margin-bottom: 10px;
       text-transform: uppercase;
     }
-    .hero h1 {
-      font-size: 26px;
-      font-weight: 800;
-      line-height: 1.2;
-      margin-bottom: 8px;
-    }
-    .hero p {
-      font-size: 13px;
-      opacity: 0.88;
-      margin-bottom: 18px;
-      line-height: 1.5;
-    }
+    .hero h1 { font-size: 22px; font-weight: 700; line-height: 1.25; margin-bottom: 8px; }
+    .hero p  { font-size: 13px; opacity: 0.85; margin-bottom: 18px; line-height: 1.5; }
+
     .search-bar {
       background: white;
       border-radius: var(--radio-btn);
-      padding: 11px 14px;
+      padding: 12px 14px;
       display: flex;
       align-items: center;
       gap: 8px;
       color: var(--texto-sec);
       font-size: 14px;
     }
+    [data-theme="dark"] .search-bar { background: var(--superficie); }
 
-    /* ── PILLS ── */
+    /* ── FILTER PILLS ────────────────────────────────────── */
     .pills {
       display: flex;
       gap: 8px;
-      padding: 13px 14px;
+      padding: 14px 16px;
       overflow-x: auto;
       scrollbar-width: none;
     }
     .pills::-webkit-scrollbar { display: none; }
     .pill {
-      padding: 6px 15px;
+      padding: 7px 16px;
       border-radius: 20px;
       font-size: 13px;
       font-weight: 500;
       white-space: nowrap;
       cursor: pointer;
-      border: 1.5px solid #D0E4EE;
-      background: white;
+      border: 1.5px solid var(--borde);
+      background: var(--superficie);
       color: var(--texto);
+      transition: all 0.15s;
     }
-    .dark .pill { background: #1A3A4A; border-color: #2A5A6A; color: var(--texto); }
     .pill.active {
       background: var(--acento);
       border-color: var(--acento);
@@ -170,166 +238,147 @@
       font-weight: 700;
     }
 
-    /* ── SECCIONES ── */
-    .section { padding: 4px 14px 10px; }
+    /* ── SECCIONES ───────────────────────────────────────── */
+    .section { padding: 4px 16px 16px; }
     .section-header {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
-      margin-bottom: 6px;
+      margin-bottom: 12px;
     }
-    .section-subtitle { font-size: 11px; color: var(--texto-sec); margin-top: 1px; margin-bottom: 12px; }
-    .section-title { font-size: 15px; font-weight: 700; }
+    .section-title { font-size: 16px; font-weight: 700; }
+    .section-sub   { font-size: 11px; color: var(--texto-sec); margin-top: 2px; }
     .ver-todo { font-size: 13px; color: var(--primario); font-weight: 500; }
 
-    /* ── CARDS ── */
+    /* ── CARDS ───────────────────────────────────────────── */
     .cards-row {
       display: flex;
-      gap: 10px;
+      gap: 12px;
       overflow-x: auto;
       padding-bottom: 4px;
       scrollbar-width: none;
     }
     .cards-row::-webkit-scrollbar { display: none; }
+
     .card {
-      min-width: 152px;
-      background: white;
+      min-width: 158px;
+      background: var(--superficie);
       border-radius: var(--radio-card);
       overflow: hidden;
       flex-shrink: 0;
-      box-shadow: 0 1px 5px rgba(15,43,61,0.08);
+      box-shadow: 0 1px 6px rgba(15,43,61,0.08);
     }
-    .dark .card { background: #1A3A4A; }
 
-    /* Ilustración llanera con SVG */
     .card-img {
       height: 100px;
       position: relative;
-      overflow: hidden;
-    }
-    .card-img svg { width: 100%; height: 100%; }
-
-    .fav-btn {
-      position: absolute;
-      top: 6px; right: 6px;
-      width: 26px; height: 26px;
-      background: white;
-      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 13px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
-      cursor: pointer;
+      font-size: 36px;
     }
+    /* Ilustración estilo llanero: cielo + palmera */
+    .card-img svg { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
+
+    .fav-btn {
+      position: absolute;
+      top: 8px; right: 8px;
+      width: 28px; height: 28px;
+      background: white;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+    }
+
     .badge {
       position: absolute;
-      top: 7px; left: 7px;
+      top: 8px; left: 8px;
       font-size: 9px;
       font-weight: 700;
       padding: 3px 7px;
       border-radius: 4px;
-      letter-spacing: 0.4px;
+      letter-spacing: 0.5px;
       text-transform: uppercase;
     }
-    .badge-v  { background: var(--primario); color: white; }
-    .badge-n  { background: var(--acento);   color: var(--acento-texto); }
-    .badge-p  { background: var(--popular);  color: white; }
-    .badge-d  { background: var(--acento);   color: var(--acento-texto); }
+    .badge-verificado { background: var(--primario); color: white; }
+    .badge-nuevo      { background: var(--acento);   color: var(--acento-texto); }
+    .badge-popular    { background: var(--popular);  color: white; }
+    .badge-destacado  { background: var(--acento);   color: var(--acento-texto); }
 
-    .card-body { padding: 9px 10px 11px; }
-    .card-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
-    .card-location { font-size: 11px; color: var(--texto-sec); margin-bottom: 3px; }
-    .card-rating   { font-size: 11px; color: var(--texto-sec); margin-bottom: 3px; }
-    .card-price    { font-size: 14px; font-weight: 700; }
+    .card-body  { padding: 10px 10px 12px; }
+    .card-name  { font-size: 13px; font-weight: 600; margin-bottom: 2px; color: var(--texto); }
+    .card-loc   { font-size: 11px; color: var(--texto-sec); margin-bottom: 3px; }
+    .card-rat   { font-size: 11px; color: var(--texto-sec); margin-bottom: 4px; }
+    .card-price { font-size: 14px; font-weight: 700; color: var(--texto); }
     .card-price span { font-size: 11px; font-weight: 400; color: var(--texto-sec); }
 
-    /* ── BANNER PWA ── */
-    .pwa-banner {
-      margin: 14px;
-      background: var(--primario);
-      color: white;
-      border-radius: var(--radio-card);
-      padding: 13px 14px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .pwa-banner-text h3 { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
-    .pwa-banner-text p  { font-size: 11px; opacity: 0.85; }
-    .btn-instalar {
-      margin-left: auto;
-      background: var(--acento);
-      color: var(--acento-texto);
-      border: none;
-      padding: 7px 12px;
-      border-radius: var(--radio-btn);
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-    .spacer { height: 28px; }
+    .spacer { height: 32px; }
   </style>
 </head>
-<body id="body">
+<body>
 
-  <!-- ── NAVBAR ── -->
-  <nav class="navbar">
-    <div class="nav-left">
-      <!-- HAMBURGUESA -->
-      <div class="hamburger" id="menuBtn" aria-label="Menú principal">
-        <span></span><span></span><span></span>
-      </div>
-      <!-- LOGO SVG GARZA + TEXTO -->
-      <div class="logo-wrap">
-        <svg class="logo-svg" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- Garza llanera simplificada -->
-          <ellipse cx="20" cy="28" rx="7" ry="5" fill="#1A6B8A"/>
-          <!-- Cuerpo -->
-          <ellipse cx="22" cy="22" rx="5" ry="7" fill="#1A6B8A"/>
-          <!-- Cuello -->
-          <rect x="20" y="13" width="3" height="8" rx="1.5" fill="#1A6B8A"/>
-          <!-- Cabeza -->
-          <circle cx="21" cy="11" r="3.5" fill="#1A6B8A"/>
-          <!-- Pico -->
-          <path d="M23 10 L28 9 L23 11Z" fill="#F4C430"/>
-          <!-- Ojo -->
-          <circle cx="22" cy="10" r="0.8" fill="white"/>
-          <!-- Patas -->
-          <line x1="18" y1="33" x2="16" y2="38" stroke="#1A6B8A" stroke-width="1.5" stroke-linecap="round"/>
-          <line x1="22" y1="33" x2="22" y2="38" stroke="#1A6B8A" stroke-width="1.5" stroke-linecap="round"/>
-          <!-- Ala -->
-          <path d="M17 22 Q12 20 14 26 Q17 25 22 27Z" fill="#2A8AAA"/>
-          <!-- Pluma cola -->
-          <path d="M15 28 Q10 30 13 34 Q16 31 20 32Z" fill="#2A8AAA"/>
-        </svg>
-        <span class="logo-texto">Llanea</span>
-      </div>
+  <!-- ── DRAWER ─────────────────────────────────────────── -->
+  <div class="drawer-overlay" id="overlay" onclick="cerrarDrawer()"></div>
+  <nav class="drawer" id="drawer">
+    <div class="drawer-header">
+      <img src="icon-192.png" alt="Llanea">
+      <span>Llanea</span>
     </div>
-    <div class="nav-right">
-      <!-- TOGGLE MODO OSCURO (luna) -->
-      <span class="nav-icon" id="toggleDark" title="Modo oscuro">🌙</span>
-      <!-- CAMPANA -->
-      <span class="nav-icon">🔔</span>
-      <!-- CARRITO -->
-      <div class="cart-wrap nav-icon">
-        🛒<span class="cart-badge">0</span>
-      </div>
-      <!-- AVATAR IS -->
-      <div class="avatar">IS</div>
+    <div class="drawer-menu">
+      <div class="drawer-item active">🏠 Inicio</div>
+      <div class="drawer-item">🏨 Alojamiento</div>
+      <div class="drawer-item">🍽️ Gastronomía</div>
+      <div class="drawer-item">🌿 Ecoturismo</div>
+      <div class="drawer-item">🎭 Cultura</div>
+      <div class="drawer-item">❤️ Favoritos</div>
+      <div class="drawer-item">👤 Mi cuenta</div>
     </div>
   </nav>
 
-  <!-- ── HERO ── -->
+  <!-- ── NAVBAR ─────────────────────────────────────────── -->
+  <header class="navbar">
+    <div class="nav-left">
+      <!-- Hamburguesa -->
+      <div class="hamburger" onclick="abrirDrawer()" aria-label="Menú principal">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <!-- Logo -->
+      <div class="nav-logo">
+        <img src="icon-192.png" alt="Llanea">
+        <span class="nav-logo-text">Llanea</span>
+      </div>
+    </div>
+
+    <div class="nav-right">
+      <!-- Toggle modo oscuro -->
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTema()" aria-label="Cambiar tema">
+        🌙
+      </button>
+      <!-- Campana -->
+      <span class="nav-icon">🔔</span>
+      <!-- Carrito con badge -->
+      <div class="cart-wrap">
+        <span class="nav-icon">🛒</span>
+        <span class="cart-badge">0</span>
+      </div>
+      <!-- Avatar -->
+      <div class="avatar">IS</div>
+    </div>
+  </header>
+
+  <!-- ── HERO ───────────────────────────────────────────── -->
   <section class="hero">
     <p class="hero-cats">Alojamiento · Gastronomía · Ecoturismo</p>
     <h1>Descubre el Casanare como un local.</h1>
     <p>Hatos, gastronomía llanera y ecoturismo en los 19 municipios. Todo verificado. Todo reservable en línea.</p>
-    <div class="search-bar">🔍 ¿A dónde vas en Casanare? &nbsp;<span style="margin-left:auto">🎙️</span></div>
+    <div class="search-bar">🔍 ¿A dónde vas en Casanare? &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🎤</div>
   </section>
 
-  <!-- ── PILLS ── -->
+  <!-- ── FILTER PILLS ───────────────────────────────────── -->
   <div class="pills">
     <div class="pill active">🟡 Todos</div>
     <div class="pill">Alojamiento</div>
@@ -338,83 +387,55 @@
     <div class="pill">Cultura</div>
   </div>
 
-  <!-- ── DESTACADOS ── -->
+  <!-- ── DESTACADOS ─────────────────────────────────────── -->
   <div class="section">
     <div class="section-header">
-      <span class="section-title">Destacados cerca de ti</span>
+      <div>
+        <div class="section-title">Destacados cerca de ti</div>
+        <div class="section-sub">Yopal · 15 km a la redonda</div>
+      </div>
       <span class="ver-todo">Ver todo ›</span>
     </div>
-    <p class="section-subtitle">Yopal · 15 km a la redonda</p>
     <div class="cards-row">
 
-      <!-- Card 1 — Hato La Aurora -->
       <div class="card">
-        <div class="card-img">
-          <svg viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
-            <rect width="160" height="100" fill="#E8783A"/>
-            <ellipse cx="80" cy="105" rx="90" ry="40" fill="#3A7D44"/>
-            <ellipse cx="80" cy="95" rx="70" ry="30" fill="#2D6435"/>
-            <!-- palma -->
-            <rect x="76" y="30" width="5" height="45" fill="#5C3D1E"/>
-            <ellipse cx="78" cy="28" rx="18" ry="10" fill="#3A7D44" transform="rotate(-15 78 28)"/>
-            <ellipse cx="78" cy="28" rx="16" ry="9" fill="#4A9E56" transform="rotate(10 78 28)"/>
-            <!-- aves -->
-            <path d="M20 20 Q23 17 26 20" stroke="#0F2B3D" stroke-width="1.2" fill="none"/>
-            <path d="M110 15 Q113 12 116 15" stroke="#0F2B3D" stroke-width="1.2" fill="none"/>
-            <path d="M130 25 Q133 22 136 25" stroke="#0F2B3D" stroke-width="1" fill="none"/>
-          </svg>
-          <span class="badge badge-v">✓ Verificado</span>
-          <div class="fav-btn">♡</div>
+        <div class="card-img" style="background:linear-gradient(180deg,#5BA4B0 0%,#3A8A7A 50%,#4A7A3A 100%)">
+          <svg viewBox="0 0 160 100"><ellipse cx="80" cy="95" rx="60" ry="18" fill="#4A7A3A"/><rect x="74" y="30" width="5" height="50" fill="#5A4A2A"/><path d="M79 48 Q60 35 55 20 Q72 28 79 42Z" fill="#2A6A3A"/><path d="M79 55 Q98 40 105 24 Q88 35 79 50Z" fill="#2A6A3A"/><circle cx="55" cy="18" r="12" fill="#F4C430" opacity="0.9"/></svg>
+          <span class="badge badge-verificado">✓ Verificado</span>
+          <div class="fav-btn">🤍</div>
         </div>
         <div class="card-body">
           <div class="card-name">Hato La Aurora</div>
-          <div class="card-location">📍 Paz de Ariporo</div>
-          <div class="card-rating">⭐ 4.8 (124)</div>
+          <div class="card-loc">📍 Paz de Ariporo</div>
+          <div class="card-rat">⭐ 4.8 (124)</div>
           <div class="card-price">$280k <span>/ noche</span></div>
         </div>
       </div>
 
-      <!-- Card 2 — El Morichal -->
       <div class="card">
-        <div class="card-img">
-          <svg viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
-            <rect width="160" height="100" fill="#F4C430"/>
-            <ellipse cx="80" cy="105" rx="90" ry="38" fill="#3A7D44"/>
-            <rect x="74" y="25" width="6" height="50" fill="#5C3D1E"/>
-            <ellipse cx="77" cy="22" rx="20" ry="11" fill="#2D6435" transform="rotate(-20 77 22)"/>
-            <ellipse cx="77" cy="22" rx="18" ry="10" fill="#3A7D44" transform="rotate(15 77 22)"/>
-            <path d="M30 18 Q33 15 36 18" stroke="#0F2B3D" stroke-width="1.2" fill="none"/>
-          </svg>
-          <span class="badge badge-n">Nuevo</span>
-          <div class="fav-btn">♡</div>
+        <div class="card-img" style="background:linear-gradient(180deg,#E8953A 0%,#D4782A 40%,#4A7A3A 100%)">
+          <svg viewBox="0 0 160 100"><ellipse cx="80" cy="95" rx="60" ry="18" fill="#4A7A3A"/><rect x="74" y="28" width="5" height="55" fill="#5A4A2A"/><path d="M79 45 Q58 30 50 14 Q70 24 79 40Z" fill="#2A6A3A"/><path d="M79 52 Q100 36 108 20 Q90 32 79 48Z" fill="#2A6A3A"/></svg>
+          <span class="badge badge-nuevo">Nuevo</span>
+          <div class="fav-btn">🤍</div>
         </div>
         <div class="card-body">
           <div class="card-name">El Morichal</div>
-          <div class="card-location">📍 Yopal</div>
-          <div class="card-rating">⭐ 4.6 (38)</div>
+          <div class="card-loc">📍 Yopal</div>
+          <div class="card-rat">⭐ 4.6 (38)</div>
           <div class="card-price">$45k <span>/ persona</span></div>
         </div>
       </div>
 
-      <!-- Card 3 — Glamping Río Cravo -->
       <div class="card">
-        <div class="card-img">
-          <svg viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
-            <rect width="160" height="100" fill="#1A6B8A"/>
-            <ellipse cx="80" cy="108" rx="90" ry="38" fill="#2D6435"/>
-            <rect x="76" y="28" width="5" height="46" fill="#5C3D1E"/>
-            <ellipse cx="78" cy="26" rx="17" ry="9" fill="#3A7D44" transform="rotate(-10 78 26)"/>
-            <ellipse cx="78" cy="26" rx="15" ry="8" fill="#4A9E56" transform="rotate(20 78 26)"/>
-            <path d="M115 18 Q118 15 121 18" stroke="white" stroke-width="1" fill="none" opacity="0.5"/>
-            <path d="M125 25 Q128 22 131 25" stroke="white" stroke-width="1" fill="none" opacity="0.4"/>
-          </svg>
-          <span class="badge badge-v">✓ Verificado</span>
-          <div class="fav-btn">♡</div>
+        <div class="card-img" style="background:linear-gradient(180deg,#5BA4B0 0%,#3A7A9A 50%,#4A7A3A 100%)">
+          <svg viewBox="0 0 160 100"><ellipse cx="80" cy="95" rx="60" ry="18" fill="#4A7A3A"/><rect x="74" y="32" width="5" height="48" fill="#5A4A2A"/><path d="M79 50 Q62 36 56 22 Q74 30 79 46Z" fill="#2A6A3A"/><path d="M79 57 Q96 42 102 28 Q86 38 79 53Z" fill="#2A6A3A"/></svg>
+          <span class="badge badge-verificado">✓ Verificado</span>
+          <div class="fav-btn">🤍</div>
         </div>
         <div class="card-body">
           <div class="card-name">Glamping Río Cravo</div>
-          <div class="card-location">📍 Orocué</div>
-          <div class="card-rating">⭐ 4.9 (41)</div>
+          <div class="card-loc">📍 Orocué</div>
+          <div class="card-rat">⭐ 4.9 (41)</div>
           <div class="card-price">$350k <span>/ noche</span></div>
         </div>
       </div>
@@ -422,8 +443,8 @@
     </div>
   </div>
 
-  <!-- ── HOTELES Y ALOJAMIENTO ── -->
-  <div class="section" style="margin-top:6px">
+  <!-- ── HOTELES Y ALOJAMIENTO ──────────────────────────── -->
+  <div class="section">
     <div class="section-header">
       <span class="section-title">🏨 Hoteles y Alojamiento</span>
       <span class="ver-todo">Ver todo ›</span>
@@ -431,59 +452,42 @@
     <div class="cards-row">
 
       <div class="card">
-        <div class="card-img">
-          <svg viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
-            <rect width="160" height="100" fill="#2A8AAA"/>
-            <ellipse cx="80" cy="108" rx="90" ry="36" fill="#3A7D44"/>
-            <rect x="74" y="30" width="6" height="44" fill="#5C3D1E"/>
-            <ellipse cx="77" cy="28" rx="18" ry="10" fill="#2D6435" transform="rotate(-12 77 28)"/>
-            <ellipse cx="77" cy="28" rx="16" ry="9" fill="#4A9E56" transform="rotate(18 77 28)"/>
-          </svg>
-          <span class="badge badge-v">✓ Verificado</span>
-          <div class="fav-btn">♡</div>
+        <div class="card-img" style="background:linear-gradient(180deg,#5BA4B0 0%,#4A8A7A 50%,#4A7A3A 100%)">
+          <svg viewBox="0 0 160 100"><ellipse cx="80" cy="95" rx="60" ry="18" fill="#4A7A3A"/><rect x="74" y="30" width="5" height="50" fill="#5A4A2A"/><path d="M79 48 Q61 33 54 18 Q73 27 79 43Z" fill="#2A6A3A"/><path d="M79 55 Q97 40 104 25 Q87 36 79 51Z" fill="#2A6A3A"/></svg>
+          <span class="badge badge-verificado">✓ Verificado</span>
+          <div class="fav-btn">🤍</div>
         </div>
         <div class="card-body">
           <div class="card-name">Hotel Sabana Real</div>
-          <div class="card-location">📍 Villanueva</div>
-          <div class="card-rating">⭐ 4.3 (67)</div>
+          <div class="card-loc">📍 Villanueva</div>
+          <div class="card-rat">⭐ 4.3 (67)</div>
           <div class="card-price">$180k <span>/ noche</span></div>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-img">
-          <svg viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
-            <rect width="160" height="100" fill="#E8783A"/>
-            <ellipse cx="80" cy="108" rx="90" ry="36" fill="#2D6435"/>
-            <rect x="76" y="28" width="5" height="46" fill="#5C3D1E"/>
-            <ellipse cx="78" cy="26" rx="20" ry="11" fill="#3A7D44" transform="rotate(-8 78 26)"/>
-          </svg>
-          <span class="badge badge-d">Destacado</span>
-          <div class="fav-btn">♡</div>
+        <div class="card-img" style="background:linear-gradient(180deg,#D4782A 0%,#E8953A 40%,#4A7A3A 100%)">
+          <svg viewBox="0 0 160 100"><ellipse cx="80" cy="95" rx="60" ry="18" fill="#4A7A3A"/><rect x="74" y="28" width="5" height="55" fill="#5A4A2A"/><path d="M79 46 Q60 31 52 16 Q71 25 79 41Z" fill="#2A6A3A"/><path d="M79 53 Q99 38 107 22 Q89 33 79 49Z" fill="#2A6A3A"/></svg>
+          <span class="badge badge-destacado">Destacado</span>
+          <div class="fav-btn">🤍</div>
         </div>
         <div class="card-body">
           <div class="card-name">Glamping Horizonte</div>
-          <div class="card-location">📍 Tauramena</div>
-          <div class="card-rating">⭐ 4.9 (22)</div>
+          <div class="card-loc">📍 Tauramena</div>
+          <div class="card-rat">⭐ 4.9 (22)</div>
           <div class="card-price">$320k <span>/ noche</span></div>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-img">
-          <svg viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
-            <rect width="160" height="100" fill="#F4C430"/>
-            <ellipse cx="80" cy="108" rx="90" ry="36" fill="#3A7D44"/>
-            <rect x="75" y="30" width="5" height="44" fill="#5C3D1E"/>
-            <ellipse cx="77" cy="28" rx="16" ry="9" fill="#2D6435" transform="rotate(22 77 28)"/>
-            <ellipse cx="77" cy="28" rx="14" ry="8" fill="#4A9E56" transform="rotate(-5 77 28)"/>
-          </svg>
-          <div class="fav-btn">♡</div>
+        <div class="card-img" style="background:linear-gradient(180deg,#5BA4B0 0%,#3A6A8A 50%,#4A7A3A 100%)">
+          <svg viewBox="0 0 160 100"><ellipse cx="80" cy="95" rx="60" ry="18" fill="#4A7A3A"/><rect x="74" y="32" width="5" height="48" fill="#5A4A2A"/><path d="M79 50 Q63 35 57 20 Q75 29 79 45Z" fill="#2A6A3A"/><path d="M79 57 Q95 42 101 27 Q85 37 79 53Z" fill="#2A6A3A"/></svg>
+          <div class="fav-btn">🤍</div>
         </div>
         <div class="card-body">
           <div class="card-name">Posada El Llano</div>
-          <div class="card-location">📍 Aguazul</div>
-          <div class="card-rating">⭐ 4.1 (15)</div>
+          <div class="card-loc">📍 Aguazul</div>
+          <div class="card-rat">⭐ 4.1 (15)</div>
           <div class="card-price">$95k <span>/ noche</span></div>
         </div>
       </div>
@@ -491,8 +495,8 @@
     </div>
   </div>
 
-  <!-- ── GASTRONOMÍA LLANERA ── -->
-  <div class="section" style="margin-top:6px">
+  <!-- ── GASTRONOMÍA ────────────────────────────────────── -->
+  <div class="section">
     <div class="section-header">
       <span class="section-title">🍽️ Gastronomía Llanera</span>
       <span class="ver-todo">Ver todo ›</span>
@@ -500,59 +504,43 @@
     <div class="cards-row">
 
       <div class="card">
-        <div class="card-img">
-          <svg viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
-            <rect width="160" height="100" fill="#E8783A"/>
-            <ellipse cx="80" cy="108" rx="90" ry="36" fill="#2D6435"/>
-            <rect x="76" y="30" width="5" height="44" fill="#5C3D1E"/>
-            <ellipse cx="78" cy="28" rx="18" ry="10" fill="#3A7D44" transform="rotate(-15 78 28)"/>
-          </svg>
-          <span class="badge badge-p">Popular</span>
-          <div class="fav-btn">♡</div>
+        <div class="card-img" style="background:linear-gradient(180deg,#E8953A 0%,#D4782A 40%,#4A7A3A 100%)">
+          <svg viewBox="0 0 160 100"><ellipse cx="80" cy="95" rx="60" ry="18" fill="#4A7A3A"/><rect x="74" y="30" width="5" height="50" fill="#5A4A2A"/><path d="M79 48 Q60 33 53 17 Q73 26 79 42Z" fill="#2A6A3A"/><path d="M79 55 Q98 40 105 24 Q87 35 79 51Z" fill="#2A6A3A"/></svg>
+          <span class="badge badge-popular">Popular</span>
+          <div class="fav-btn">🤍</div>
         </div>
         <div class="card-body">
           <div class="card-name">Asadero Don Ramón</div>
-          <div class="card-location">📍 Yopal</div>
-          <div class="card-rating">⭐ 4.5 (203)</div>
+          <div class="card-loc">📍 Yopal</div>
+          <div class="card-rat">⭐ 4.5 (203)</div>
           <div class="card-price">$35k <span>/ persona</span></div>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-img">
-          <svg viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
-            <rect width="160" height="100" fill="#1A6B8A"/>
-            <ellipse cx="80" cy="108" rx="90" ry="36" fill="#3A7D44"/>
-            <rect x="75" y="28" width="6" height="46" fill="#5C3D1E"/>
-            <ellipse cx="78" cy="26" rx="19" ry="11" fill="#2D6435" transform="rotate(10 78 26)"/>
-            <ellipse cx="78" cy="26" rx="17" ry="9" fill="#4A9E56" transform="rotate(-20 78 26)"/>
-          </svg>
-          <span class="badge badge-v">✓ Verificado</span>
-          <div class="fav-btn">♡</div>
+        <div class="card-img" style="background:linear-gradient(180deg,#5BA4B0 0%,#E8953A 50%,#4A7A3A 100%)">
+          <svg viewBox="0 0 160 100"><ellipse cx="80" cy="95" rx="60" ry="18" fill="#4A7A3A"/><rect x="74" y="28" width="5" height="55" fill="#5A4A2A"/><path d="M79 46 Q61 31 54 16 Q72 25 79 41Z" fill="#2A6A3A"/><path d="M79 53 Q97 38 105 22 Q88 33 79 49Z" fill="#2A6A3A"/></svg>
+          <span class="badge badge-verificado">✓ Verificado</span>
+          <div class="fav-btn">🤍</div>
         </div>
         <div class="card-body">
           <div class="card-name">Restaurante La Sabana</div>
-          <div class="card-location">📍 Yopal</div>
-          <div class="card-rating">⭐ 4.7 (89)</div>
-          <div class="card-price">$28k <span>/ persona</span></div>
+          <div class="card-loc">📍 Yopal</div>
+          <div class="card-rat">⭐ 4.7 (89)</div>
+          <div class="card-price">$28k <span>/ plato</span></div>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-img">
-          <svg viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
-            <rect width="160" height="100" fill="#F4C430"/>
-            <ellipse cx="80" cy="108" rx="90" ry="36" fill="#2D6435"/>
-            <rect x="76" y="30" width="5" height="44" fill="#5C3D1E"/>
-            <ellipse cx="78" cy="28" rx="17" ry="9" fill="#3A7D44" transform="rotate(-5 78 28)"/>
-          </svg>
-          <span class="badge badge-d">Destacado</span>
-          <div class="fav-btn">♡</div>
+        <div class="card-img" style="background:linear-gradient(180deg,#2A5A7A 0%,#1A4A6A 40%,#4A7A3A 100%)">
+          <svg viewBox="0 0 160 100"><ellipse cx="80" cy="95" rx="60" ry="18" fill="#4A7A3A"/><rect x="74" y="32" width="5" height="48" fill="#5A4A2A"/><path d="M79 50 Q62 35 56 20 Q75 29 79 45Z" fill="#2A6A3A"/><path d="M79 57 Q96 42 103 27 Q86 37 79 53Z" fill="#2A6A3A"/></svg>
+          <span class="badge badge-destacado">Destacado</span>
+          <div class="fav-btn">🤍</div>
         </div>
         <div class="card-body">
           <div class="card-name">El Chinchorro</div>
-          <div class="card-location">📍 Villanueva</div>
-          <div class="card-rating">⭐ 4.8 (156)</div>
+          <div class="card-loc">📍 Villanueva</div>
+          <div class="card-rat">⭐ 4.8 (156)</div>
           <div class="card-price">$42k <span>/ persona</span></div>
         </div>
       </div>
@@ -560,20 +548,11 @@
     </div>
   </div>
 
-  <!-- ── BANNER PWA ── -->
-  <div class="pwa-banner">
-    <span style="font-size:26px">📲</span>
-    <div class="pwa-banner-text">
-      <h3>Instala Llanea</h3>
-      <p>Agrégala a tu pantalla de inicio. Sin tiendas de apps.</p>
-    </div>
-    <button class="btn-instalar" id="btnInstalar">Instalar</button>
-  </div>
-
   <div class="spacer"></div>
 
+  <!-- ── SERVICE WORKER ─────────────────────────────────── -->
   <script>
-    // ── REGISTRO DEL SERVICE WORKER ──────────────────────────────
+    // ── REGISTRO DEL SERVICE WORKER ─────────────────────────────
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker
         .register('./sw.js')
@@ -581,26 +560,34 @@
         .catch(err => console.error('[Llanea PWA] Error SW:', err));
     }
 
-    // ── TOGGLE MODO OSCURO ───────────────────────────────────────
-    const body = document.getElementById('body');
-    const btn  = document.getElementById('toggleDark');
-    btn.addEventListener('click', () => {
-      body.classList.toggle('dark');
-      btn.textContent = body.classList.contains('dark') ? '☀️' : '🌙';
-    });
+    // ── DRAWER ───────────────────────────────────────────────────
+    function abrirDrawer() {
+      document.getElementById('drawer').classList.add('open');
+      document.getElementById('overlay').classList.add('open');
+    }
+    function cerrarDrawer() {
+      document.getElementById('drawer').classList.remove('open');
+      document.getElementById('overlay').classList.remove('open');
+    }
 
-    // ── PROMPT DE INSTALACIÓN PWA ────────────────────────────────
+    // ── TOGGLE MODO OSCURO ───────────────────────────────────────
+    function toggleTema() {
+      const html = document.documentElement;
+      const btn  = document.getElementById('themeToggle');
+      if (html.dataset.theme === 'dark') {
+        html.dataset.theme = 'light';
+        btn.textContent = '🌙';
+      } else {
+        html.dataset.theme = 'dark';
+        btn.textContent = '☀️';
+      }
+    }
+
+    // ── PROMPT DE INSTALACIÓN ────────────────────────────────────
     let deferredPrompt = null;
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-    });
-    document.getElementById('btnInstalar').addEventListener('click', async () => {
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      console.log('[Llanea PWA] Respuesta:', outcome);
-      deferredPrompt = null;
     });
   </script>
 </body>
