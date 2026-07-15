@@ -1,61 +1,33 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- ============================================================
-    META VIEWPORT — hace que la app se vea correctamente en móvil.
-    Sin esta línea, el navegador renderiza la página en escritorio
-    y la encoge, rompiendo el diseño responsive.
-  ============================================================ -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- ============================================================
-    META CHARSET — define la codificación de texto.
-    Necesario para que tildes y ñ se muestren correctamente.
-  ============================================================ -->
   <meta charset="UTF-8">
-
-  <!-- ============================================================
-    LINK AL MANIFEST — convierte la web en PWA instalable.
-    El navegador lee este archivo para saber el nombre, ícono
-    y color de la app cuando el usuario la "instala" en pantalla.
-  ============================================================ -->
   <link rel="manifest" href="manifest.json">
-
-  <!-- ============================================================
-    META THEME COLOR — color de la barra del navegador en Android.
-    Se usa el primario de Llanea (#1A6B8A).
-  ============================================================ -->
   <meta name="theme-color" content="#1A6B8A">
-
-  <!-- ============================================================
-    META APPLE — configuración para Safari/iOS.
-    apple-mobile-web-app-capable: habilita modo pantalla completa al
-    agregar a inicio en iPhone.
-    apple-mobile-web-app-status-bar-style: barra de estado oscura.
-  ============================================================ -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Llanea">
-
   <title>Llanea — El Casanare que buscabas.</title>
-
   <style>
-    /* ── SISTEMA DE DISEÑO LLANEA ───────────────────────── */
     :root {
-      --primario:      #1A6B8A;
-      --primario-osc:  #0F4A62;
-      --acento:        #F4C430;
-      --acento-texto:  #0F4A62;
-      --fondo:         #F0F6FA;
-      --texto:         #0F2B3D;
-      --texto-sec:     #5A7A8A;
-      --popular:       #E8783A;
-      --radio-card:    12px;
-      --radio-btn:     8px;
+      --primario:     #1A6B8A;
+      --primario-osc: #0F4A62;
+      --acento:       #F4C430;
+      --acento-texto: #0F4A62;
+      --fondo:        #F0F6FA;
+      --texto:        #0F2B3D;
+      --texto-sec:    #5A7A8A;
+      --popular:      #E8783A;
+      --radio-card:   12px;
+      --radio-btn:    8px;
     }
-
+    .dark {
+      --fondo:     #0F2B3D;
+      --texto:     #F0F6FA;
+      --texto-sec: #8AACBA;
+    }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       font-family: 'Inter', 'Segoe UI', sans-serif;
       background: var(--fondo);
@@ -63,12 +35,13 @@
       min-height: 100dvh;
       max-width: 402px;
       margin: 0 auto;
+      transition: background 0.2s, color 0.2s;
     }
 
-    /* ── NAVBAR ─────────────────────────────────────────── */
+    /* ── NAVBAR ── */
     .navbar {
       background: white;
-      padding: 14px 16px;
+      padding: 12px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -77,22 +50,37 @@
       top: 0;
       z-index: 100;
     }
-    .navbar-logo {
+    .dark .navbar { background: #0F2B3D; border-bottom-color: #1A3A4A; }
+
+    .nav-left { display: flex; align-items: center; gap: 10px; }
+
+    /* Hamburguesa */
+    .hamburger {
       display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--primario);
+      flex-direction: column;
+      gap: 4px;
+      cursor: pointer;
+      padding: 2px;
     }
-    .navbar-logo .garza { font-size: 22px; }
-    .navbar-icons { display: flex; gap: 14px; align-items: center; }
-    .navbar-icons span { font-size: 20px; cursor: pointer; }
+    .hamburger span {
+      display: block;
+      width: 20px;
+      height: 2px;
+      background: var(--texto);
+      border-radius: 2px;
+    }
+
+    /* Logo SVG garza */
+    .logo-wrap { display: flex; align-items: center; gap: 7px; }
+    .logo-svg { width: 32px; height: 32px; }
+    .logo-texto { font-size: 17px; font-weight: 700; color: var(--primario); }
+
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .nav-icon { font-size: 19px; cursor: pointer; position: relative; }
+
+    /* Badge carrito */
+    .cart-wrap { position: relative; }
     .cart-badge {
-      position: relative;
-    }
-    .cart-badge::after {
-      content: '3';
       position: absolute;
       top: -6px; right: -8px;
       background: var(--acento);
@@ -101,37 +89,52 @@
       font-weight: 700;
       border-radius: 10px;
       padding: 1px 4px;
+      line-height: 1.3;
     }
 
-    /* ── HERO ────────────────────────────────────────────── */
+    /* Avatar IS */
+    .avatar {
+      width: 30px; height: 30px;
+      background: var(--primario);
+      color: white;
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    /* ── HERO ── */
     .hero {
-      background: linear-gradient(160deg, var(--primario) 0%, var(--primario-osc) 100%);
-      padding: 28px 16px 24px;
+      background: linear-gradient(160deg, #2A8AAA 0%, var(--primario-osc) 100%);
+      padding: 24px 16px 22px;
       color: white;
     }
     .hero-cats {
       font-size: 10px;
-      letter-spacing: 1.5px;
-      opacity: 0.75;
+      letter-spacing: 1.4px;
+      opacity: 0.8;
       margin-bottom: 10px;
       text-transform: uppercase;
     }
     .hero h1 {
-      font-size: 22px;
-      font-weight: 700;
-      line-height: 1.25;
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1.2;
       margin-bottom: 8px;
     }
     .hero p {
       font-size: 13px;
-      opacity: 0.85;
+      opacity: 0.88;
       margin-bottom: 18px;
       line-height: 1.5;
     }
     .search-bar {
       background: white;
       border-radius: var(--radio-btn);
-      padding: 12px 14px;
+      padding: 11px 14px;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -139,17 +142,17 @@
       font-size: 14px;
     }
 
-    /* ── FILTER PILLS ────────────────────────────────────── */
+    /* ── PILLS ── */
     .pills {
       display: flex;
       gap: 8px;
-      padding: 14px 16px;
+      padding: 13px 14px;
       overflow-x: auto;
       scrollbar-width: none;
     }
     .pills::-webkit-scrollbar { display: none; }
     .pill {
-      padding: 7px 16px;
+      padding: 6px 15px;
       border-radius: 20px;
       font-size: 13px;
       font-weight: 500;
@@ -159,6 +162,7 @@
       background: white;
       color: var(--texto);
     }
+    .dark .pill { background: #1A3A4A; border-color: #2A5A6A; color: var(--texto); }
     .pill.active {
       background: var(--acento);
       border-color: var(--acento);
@@ -166,118 +170,166 @@
       font-weight: 700;
     }
 
-    /* ── SECCIONES ───────────────────────────────────────── */
-    .section { padding: 4px 16px 8px; }
+    /* ── SECCIONES ── */
+    .section { padding: 4px 14px 10px; }
     .section-header {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
-      margin-bottom: 12px;
+      margin-bottom: 6px;
     }
-    .section-title { font-size: 16px; font-weight: 700; }
+    .section-subtitle { font-size: 11px; color: var(--texto-sec); margin-top: 1px; margin-bottom: 12px; }
+    .section-title { font-size: 15px; font-weight: 700; }
     .ver-todo { font-size: 13px; color: var(--primario); font-weight: 500; }
 
-    /* ── CARDS ───────────────────────────────────────────── */
+    /* ── CARDS ── */
     .cards-row {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       overflow-x: auto;
       padding-bottom: 4px;
       scrollbar-width: none;
     }
     .cards-row::-webkit-scrollbar { display: none; }
     .card {
-      min-width: 160px;
+      min-width: 152px;
       background: white;
       border-radius: var(--radio-card);
       overflow: hidden;
       flex-shrink: 0;
-      box-shadow: 0 1px 6px rgba(15,43,61,0.07);
+      box-shadow: 0 1px 5px rgba(15,43,61,0.08);
     }
+    .dark .card { background: #1A3A4A; }
+
+    /* Ilustración llanera con SVG */
     .card-img {
-      height: 96px;
-      background: linear-gradient(135deg, #E8783A 0%, #F4C430 60%, #1A6B8A 100%);
+      height: 100px;
       position: relative;
+      overflow: hidden;
+    }
+    .card-img svg { width: 100%; height: 100%; }
+
+    .fav-btn {
+      position: absolute;
+      top: 6px; right: 6px;
+      width: 26px; height: 26px;
+      background: white;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 32px;
+      font-size: 13px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+      cursor: pointer;
     }
     .badge {
       position: absolute;
-      top: 8px; left: 8px;
+      top: 7px; left: 7px;
       font-size: 9px;
       font-weight: 700;
       padding: 3px 7px;
       border-radius: 4px;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.4px;
       text-transform: uppercase;
     }
-    .badge-verificado { background: var(--primario); color: white; }
-    .badge-nuevo      { background: var(--acento);   color: var(--acento-texto); }
-    .badge-popular    { background: var(--popular);  color: white; }
-    .badge-destacado  { background: var(--acento);   color: var(--acento-texto); }
+    .badge-v  { background: var(--primario); color: white; }
+    .badge-n  { background: var(--acento);   color: var(--acento-texto); }
+    .badge-p  { background: var(--popular);  color: white; }
+    .badge-d  { background: var(--acento);   color: var(--acento-texto); }
 
-    .card-body { padding: 10px 10px 12px; }
+    .card-body { padding: 9px 10px 11px; }
     .card-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
-    .card-location { font-size: 11px; color: var(--texto-sec); margin-bottom: 4px; }
-    .card-rating { font-size: 11px; color: var(--texto-sec); margin-bottom: 4px; }
-    .card-price { font-size: 14px; font-weight: 700; color: var(--texto); }
+    .card-location { font-size: 11px; color: var(--texto-sec); margin-bottom: 3px; }
+    .card-rating   { font-size: 11px; color: var(--texto-sec); margin-bottom: 3px; }
+    .card-price    { font-size: 14px; font-weight: 700; }
     .card-price span { font-size: 11px; font-weight: 400; color: var(--texto-sec); }
 
-    /* ── BANNER PWA ──────────────────────────────────────── */
+    /* ── BANNER PWA ── */
     .pwa-banner {
-      margin: 16px;
+      margin: 14px;
       background: var(--primario);
       color: white;
       border-radius: var(--radio-card);
-      padding: 14px 16px;
+      padding: 13px 14px;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
-    .pwa-banner .icon { font-size: 28px; }
-    .pwa-banner-text h3 { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
-    .pwa-banner-text p  { font-size: 12px; opacity: 0.85; }
+    .pwa-banner-text h3 { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+    .pwa-banner-text p  { font-size: 11px; opacity: 0.85; }
     .btn-instalar {
       margin-left: auto;
       background: var(--acento);
       color: var(--acento-texto);
       border: none;
-      padding: 8px 14px;
+      padding: 7px 12px;
       border-radius: var(--radio-btn);
       font-size: 12px;
       font-weight: 700;
       cursor: pointer;
       white-space: nowrap;
     }
-
-    .spacer { height: 32px; }
+    .spacer { height: 28px; }
   </style>
 </head>
-<body>
+<body id="body">
 
-  <!-- NAVBAR -->
+  <!-- ── NAVBAR ── -->
   <nav class="navbar">
-    <div class="navbar-logo">
-      <span class="garza">🦤</span> Llanea
+    <div class="nav-left">
+      <!-- HAMBURGUESA -->
+      <div class="hamburger" id="menuBtn" aria-label="Menú principal">
+        <span></span><span></span><span></span>
+      </div>
+      <!-- LOGO SVG GARZA + TEXTO -->
+      <div class="logo-wrap">
+        <svg class="logo-svg" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Garza llanera simplificada -->
+          <ellipse cx="20" cy="28" rx="7" ry="5" fill="#1A6B8A"/>
+          <!-- Cuerpo -->
+          <ellipse cx="22" cy="22" rx="5" ry="7" fill="#1A6B8A"/>
+          <!-- Cuello -->
+          <rect x="20" y="13" width="3" height="8" rx="1.5" fill="#1A6B8A"/>
+          <!-- Cabeza -->
+          <circle cx="21" cy="11" r="3.5" fill="#1A6B8A"/>
+          <!-- Pico -->
+          <path d="M23 10 L28 9 L23 11Z" fill="#F4C430"/>
+          <!-- Ojo -->
+          <circle cx="22" cy="10" r="0.8" fill="white"/>
+          <!-- Patas -->
+          <line x1="18" y1="33" x2="16" y2="38" stroke="#1A6B8A" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="22" y1="33" x2="22" y2="38" stroke="#1A6B8A" stroke-width="1.5" stroke-linecap="round"/>
+          <!-- Ala -->
+          <path d="M17 22 Q12 20 14 26 Q17 25 22 27Z" fill="#2A8AAA"/>
+          <!-- Pluma cola -->
+          <path d="M15 28 Q10 30 13 34 Q16 31 20 32Z" fill="#2A8AAA"/>
+        </svg>
+        <span class="logo-texto">Llanea</span>
+      </div>
     </div>
-    <div class="navbar-icons">
-      <span>🔔</span>
-      <span class="cart-badge">🛒</span>
-      <span>👤</span>
+    <div class="nav-right">
+      <!-- TOGGLE MODO OSCURO (luna) -->
+      <span class="nav-icon" id="toggleDark" title="Modo oscuro">🌙</span>
+      <!-- CAMPANA -->
+      <span class="nav-icon">🔔</span>
+      <!-- CARRITO -->
+      <div class="cart-wrap nav-icon">
+        🛒<span class="cart-badge">0</span>
+      </div>
+      <!-- AVATAR IS -->
+      <div class="avatar">IS</div>
     </div>
   </nav>
 
-  <!-- HERO -->
+  <!-- ── HERO ── -->
   <section class="hero">
     <p class="hero-cats">Alojamiento · Gastronomía · Ecoturismo</p>
     <h1>Descubre el Casanare como un local.</h1>
-    <p>Hatos, gastronomía llanera y ecoturismo en los 19 municipios. Todo verificado.</p>
-    <div class="search-bar">🔍 ¿A dónde vas en Casanare?</div>
+    <p>Hatos, gastronomía llanera y ecoturismo en los 19 municipios. Todo verificado. Todo reservable en línea.</p>
+    <div class="search-bar">🔍 ¿A dónde vas en Casanare? &nbsp;<span style="margin-left:auto">🎙️</span></div>
   </section>
 
-  <!-- FILTER PILLS -->
+  <!-- ── PILLS ── -->
   <div class="pills">
     <div class="pill active">🟡 Todos</div>
     <div class="pill">Alojamiento</div>
@@ -286,17 +338,33 @@
     <div class="pill">Cultura</div>
   </div>
 
-  <!-- SECCIÓN: DESTACADOS -->
+  <!-- ── DESTACADOS ── -->
   <div class="section">
     <div class="section-header">
       <span class="section-title">Destacados cerca de ti</span>
       <span class="ver-todo">Ver todo ›</span>
     </div>
+    <p class="section-subtitle">Yopal · 15 km a la redonda</p>
     <div class="cards-row">
+
+      <!-- Card 1 — Hato La Aurora -->
       <div class="card">
         <div class="card-img">
-          🌿
-          <span class="badge badge-verificado">✓ Verificado</span>
+          <svg viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
+            <rect width="160" height="100" fill="#E8783A"/>
+            <ellipse cx="80" cy="105" rx="90" ry="40" fill="#3A7D44"/>
+            <ellipse cx="80" cy="95" rx="70" ry="30" fill="#2D6435"/>
+            <!-- palma -->
+            <rect x="76" y="30" width="5" height="45" fill="#5C3D1E"/>
+            <ellipse cx="78" cy="28" rx="18" ry="10" fill="#3A7D44" transform="rotate(-15 78 28)"/>
+            <ellipse cx="78" cy="28" rx="16" ry="9" fill="#4A9E56" transform="rotate(10 78 28)"/>
+            <!-- aves -->
+            <path d="M20 20 Q23 17 26 20" stroke="#0F2B3D" stroke-width="1.2" fill="none"/>
+            <path d="M110 15 Q113 12 116 15" stroke="#0F2B3D" stroke-width="1.2" fill="none"/>
+            <path d="M130 25 Q133 22 136 25" stroke="#0F2B3D" stroke-width="1" fill="none"/>
+          </svg>
+          <span class="badge badge-v">✓ Verificado</span>
+          <div class="fav-btn">♡</div>
         </div>
         <div class="card-body">
           <div class="card-name">Hato La Aurora</div>
@@ -305,10 +373,20 @@
           <div class="card-price">$280k <span>/ noche</span></div>
         </div>
       </div>
+
+      <!-- Card 2 — El Morichal -->
       <div class="card">
-        <div class="card-img" style="background:linear-gradient(135deg,#F4C430,#E8783A)">
-          🌴
-          <span class="badge badge-nuevo">Nuevo</span>
+        <div class="card-img">
+          <svg viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
+            <rect width="160" height="100" fill="#F4C430"/>
+            <ellipse cx="80" cy="105" rx="90" ry="38" fill="#3A7D44"/>
+            <rect x="74" y="25" width="6" height="50" fill="#5C3D1E"/>
+            <ellipse cx="77" cy="22" rx="20" ry="11" fill="#2D6435" transform="rotate(-20 77 22)"/>
+            <ellipse cx="77" cy="22" rx="18" ry="10" fill="#3A7D44" transform="rotate(15 77 22)"/>
+            <path d="M30 18 Q33 15 36 18" stroke="#0F2B3D" stroke-width="1.2" fill="none"/>
+          </svg>
+          <span class="badge badge-n">Nuevo</span>
+          <div class="fav-btn">♡</div>
         </div>
         <div class="card-body">
           <div class="card-name">El Morichal</div>
@@ -317,10 +395,21 @@
           <div class="card-price">$45k <span>/ persona</span></div>
         </div>
       </div>
+
+      <!-- Card 3 — Glamping Río Cravo -->
       <div class="card">
-        <div class="card-img" style="background:linear-gradient(135deg,#1A6B8A,#0F2B3D)">
-          🏞️
-          <span class="badge badge-verificado">✓ Verificado</span>
+        <div class="card-img">
+          <svg viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
+            <rect width="160" height="100" fill="#1A6B8A"/>
+            <ellipse cx="80" cy="108" rx="90" ry="38" fill="#2D6435"/>
+            <rect x="76" y="28" width="5" height="46" fill="#5C3D1E"/>
+            <ellipse cx="78" cy="26" rx="17" ry="9" fill="#3A7D44" transform="rotate(-10 78 26)"/>
+            <ellipse cx="78" cy="26" rx="15" ry="8" fill="#4A9E56" transform="rotate(20 78 26)"/>
+            <path d="M115 18 Q118 15 121 18" stroke="white" stroke-width="1" fill="none" opacity="0.5"/>
+            <path d="M125 25 Q128 22 131 25" stroke="white" stroke-width="1" fill="none" opacity="0.4"/>
+          </svg>
+          <span class="badge badge-v">✓ Verificado</span>
+          <div class="fav-btn">♡</div>
         </div>
         <div class="card-body">
           <div class="card-name">Glamping Río Cravo</div>
@@ -329,20 +418,97 @@
           <div class="card-price">$350k <span>/ noche</span></div>
         </div>
       </div>
+
     </div>
   </div>
 
-  <!-- SECCIÓN: GASTRONOMÍA -->
-  <div class="section" style="margin-top:8px">
+  <!-- ── HOTELES Y ALOJAMIENTO ── -->
+  <div class="section" style="margin-top:6px">
+    <div class="section-header">
+      <span class="section-title">🏨 Hoteles y Alojamiento</span>
+      <span class="ver-todo">Ver todo ›</span>
+    </div>
+    <div class="cards-row">
+
+      <div class="card">
+        <div class="card-img">
+          <svg viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
+            <rect width="160" height="100" fill="#2A8AAA"/>
+            <ellipse cx="80" cy="108" rx="90" ry="36" fill="#3A7D44"/>
+            <rect x="74" y="30" width="6" height="44" fill="#5C3D1E"/>
+            <ellipse cx="77" cy="28" rx="18" ry="10" fill="#2D6435" transform="rotate(-12 77 28)"/>
+            <ellipse cx="77" cy="28" rx="16" ry="9" fill="#4A9E56" transform="rotate(18 77 28)"/>
+          </svg>
+          <span class="badge badge-v">✓ Verificado</span>
+          <div class="fav-btn">♡</div>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Hotel Sabana Real</div>
+          <div class="card-location">📍 Villanueva</div>
+          <div class="card-rating">⭐ 4.3 (67)</div>
+          <div class="card-price">$180k <span>/ noche</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img">
+          <svg viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
+            <rect width="160" height="100" fill="#E8783A"/>
+            <ellipse cx="80" cy="108" rx="90" ry="36" fill="#2D6435"/>
+            <rect x="76" y="28" width="5" height="46" fill="#5C3D1E"/>
+            <ellipse cx="78" cy="26" rx="20" ry="11" fill="#3A7D44" transform="rotate(-8 78 26)"/>
+          </svg>
+          <span class="badge badge-d">Destacado</span>
+          <div class="fav-btn">♡</div>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Glamping Horizonte</div>
+          <div class="card-location">📍 Tauramena</div>
+          <div class="card-rating">⭐ 4.9 (22)</div>
+          <div class="card-price">$320k <span>/ noche</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img">
+          <svg viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
+            <rect width="160" height="100" fill="#F4C430"/>
+            <ellipse cx="80" cy="108" rx="90" ry="36" fill="#3A7D44"/>
+            <rect x="75" y="30" width="5" height="44" fill="#5C3D1E"/>
+            <ellipse cx="77" cy="28" rx="16" ry="9" fill="#2D6435" transform="rotate(22 77 28)"/>
+            <ellipse cx="77" cy="28" rx="14" ry="8" fill="#4A9E56" transform="rotate(-5 77 28)"/>
+          </svg>
+          <div class="fav-btn">♡</div>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Posada El Llano</div>
+          <div class="card-location">📍 Aguazul</div>
+          <div class="card-rating">⭐ 4.1 (15)</div>
+          <div class="card-price">$95k <span>/ noche</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── GASTRONOMÍA LLANERA ── -->
+  <div class="section" style="margin-top:6px">
     <div class="section-header">
       <span class="section-title">🍽️ Gastronomía Llanera</span>
       <span class="ver-todo">Ver todo ›</span>
     </div>
     <div class="cards-row">
+
       <div class="card">
-        <div class="card-img" style="background:linear-gradient(135deg,#E8783A,#F4C430)">
-          🥩
-          <span class="badge badge-popular">Popular</span>
+        <div class="card-img">
+          <svg viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
+            <rect width="160" height="100" fill="#E8783A"/>
+            <ellipse cx="80" cy="108" rx="90" ry="36" fill="#2D6435"/>
+            <rect x="76" y="30" width="5" height="44" fill="#5C3D1E"/>
+            <ellipse cx="78" cy="28" rx="18" ry="10" fill="#3A7D44" transform="rotate(-15 78 28)"/>
+          </svg>
+          <span class="badge badge-p">Popular</span>
+          <div class="fav-btn">♡</div>
         </div>
         <div class="card-body">
           <div class="card-name">Asadero Don Ramón</div>
@@ -351,22 +517,37 @@
           <div class="card-price">$35k <span>/ persona</span></div>
         </div>
       </div>
+
       <div class="card">
-        <div class="card-img" style="background:linear-gradient(135deg,#1A6B8A,#E8783A)">
-          🍲
-          <span class="badge badge-verificado">✓ Verificado</span>
+        <div class="card-img">
+          <svg viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
+            <rect width="160" height="100" fill="#1A6B8A"/>
+            <ellipse cx="80" cy="108" rx="90" ry="36" fill="#3A7D44"/>
+            <rect x="75" y="28" width="6" height="46" fill="#5C3D1E"/>
+            <ellipse cx="78" cy="26" rx="19" ry="11" fill="#2D6435" transform="rotate(10 78 26)"/>
+            <ellipse cx="78" cy="26" rx="17" ry="9" fill="#4A9E56" transform="rotate(-20 78 26)"/>
+          </svg>
+          <span class="badge badge-v">✓ Verificado</span>
+          <div class="fav-btn">♡</div>
         </div>
         <div class="card-body">
-          <div class="card-name">Fogón Llanero</div>
+          <div class="card-name">Restaurante La Sabana</div>
           <div class="card-location">📍 Yopal</div>
           <div class="card-rating">⭐ 4.7 (89)</div>
-          <div class="card-price">$28k <span>/ plato</span></div>
+          <div class="card-price">$28k <span>/ persona</span></div>
         </div>
       </div>
+
       <div class="card">
-        <div class="card-img" style="background:linear-gradient(135deg,#0F2B3D,#1A6B8A)">
-          🌮
-          <span class="badge badge-destacado">Destacado</span>
+        <div class="card-img">
+          <svg viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
+            <rect width="160" height="100" fill="#F4C430"/>
+            <ellipse cx="80" cy="108" rx="90" ry="36" fill="#2D6435"/>
+            <rect x="76" y="30" width="5" height="44" fill="#5C3D1E"/>
+            <ellipse cx="78" cy="28" rx="17" ry="9" fill="#3A7D44" transform="rotate(-5 78 28)"/>
+          </svg>
+          <span class="badge badge-d">Destacado</span>
+          <div class="fav-btn">♡</div>
         </div>
         <div class="card-body">
           <div class="card-name">El Chinchorro</div>
@@ -375,12 +556,13 @@
           <div class="card-price">$42k <span>/ persona</span></div>
         </div>
       </div>
+
     </div>
   </div>
 
-  <!-- BANNER PWA: INSTALAR -->
+  <!-- ── BANNER PWA ── -->
   <div class="pwa-banner">
-    <span class="icon">📲</span>
+    <span style="font-size:26px">📲</span>
     <div class="pwa-banner-text">
       <h3>Instala Llanea</h3>
       <p>Agrégala a tu pantalla de inicio. Sin tiendas de apps.</p>
@@ -390,44 +572,34 @@
 
   <div class="spacer"></div>
 
-  <!-- ============================================================
-    REGISTRO DEL SERVICE WORKER
-    Este bloque de JavaScript le dice al navegador que registre
-    el service worker (sw.js). El service worker es el componente
-    que permite que la PWA funcione offline y sea instalable.
-    Se ejecuta solo si el navegador soporta service workers.
-  ============================================================ -->
   <script>
-    // ── REGISTRO DEL SERVICE WORKER ─────────────────────────────
+    // ── REGISTRO DEL SERVICE WORKER ──────────────────────────────
     if ('serviceWorker' in navigator) {
-      // El navegador soporta service workers
       navigator.serviceWorker
-        .register('./sw.js')           // ruta al archivo del SW
-        .then(reg => {
-          console.log('[Llanea PWA] Service Worker registrado:', reg.scope);
-        })
-        .catch(err => {
-          console.error('[Llanea PWA] Error al registrar SW:', err);
-        });
+        .register('./sw.js')
+        .then(reg => console.log('[Llanea PWA] SW registrado:', reg.scope))
+        .catch(err => console.error('[Llanea PWA] Error SW:', err));
     }
 
-    // ── PROMPT DE INSTALACIÓN ────────────────────────────────────
-    // El navegador dispara 'beforeinstallprompt' cuando detecta
-    // que la app cumple los criterios PWA y puede instalarse.
-    let deferredPrompt = null;
-
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();           // evita que el banner aparezca solo
-      deferredPrompt = e;           // guarda el evento para usarlo después
-      document.getElementById('btnInstalar').style.display = 'block';
+    // ── TOGGLE MODO OSCURO ───────────────────────────────────────
+    const body = document.getElementById('body');
+    const btn  = document.getElementById('toggleDark');
+    btn.addEventListener('click', () => {
+      body.classList.toggle('dark');
+      btn.textContent = body.classList.contains('dark') ? '☀️' : '🌙';
     });
 
-    // Al tocar el botón "Instalar", mostramos el diálogo nativo
+    // ── PROMPT DE INSTALACIÓN PWA ────────────────────────────────
+    let deferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+    });
     document.getElementById('btnInstalar').addEventListener('click', async () => {
       if (!deferredPrompt) return;
-      deferredPrompt.prompt();                        // muestra el diálogo
+      deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
-      console.log('[Llanea PWA] Respuesta del usuario:', outcome);
+      console.log('[Llanea PWA] Respuesta:', outcome);
       deferredPrompt = null;
     });
   </script>
